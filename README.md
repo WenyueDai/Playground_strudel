@@ -1,6 +1,6 @@
 Playaround with strudel and make some of my own music!.
 
-# Install strudal locally
+# Install strudel locally
 Original source: https://www.bilibili.com/video/BV177zQBgEXz/?spm_id_from=333.337.search-card.all.click&vd_source=67d24c3091b92ef188c338583a86a4ce
 
 ```
@@ -22,7 +22,7 @@ pnpm -v                            # verify pnpm installation
 
 git clone https://codeberg.org/uzu/strudel  # clone Strudel source code locally
 
-cd strudel/                        # enter Strudel project directory
+cd strudel/                        
 
 pnpm install                       # install all project dependencies from package.json
 
