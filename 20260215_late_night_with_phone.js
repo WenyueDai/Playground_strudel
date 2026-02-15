@@ -10,31 +10,6 @@ const piano_cutoff = 2400
 const air_cutoff   = 1400
 const bass_cutoff  = 700
 
-// mimic Horn / Whistle / Siren
-// Random horn personality per cycle
-$: s("gm_harmonica")
-  .struct("<~@2 x ~>")
-  .chop(16)
-  .lpf(air_cutoff)
-  .lpa(0.45)
-  .lpenv(wchoose([
-  "<4 3 2 1 0>",
-  "<0 5 3 -1 0 -1>"
-  ]).slow(2))
-
-  .delay("<0 .125 .25 0>")
-  .delaytime("<.125 .25>")
-  .room(5)
-  .gain(sine.range(0.1, 1))
-  .adsr("1.5:1.5:2:1.5")
-
-$: s("wind")
-  .struct("<~@3 x>")
-  .lpf(air_cutoff)
-  .delay("<0 .125 .25 0>")
-  .delaytime("<.125 .25>")
-  .adsr("3:1.5:2:1.5")
-  .gain(sine.range(0.4, 1))
 
 $: note("<~ 84@3 ~ 86@3 84@3 ~ 88@3 ~>")
   .s("sine")
@@ -45,6 +20,16 @@ $: note("<~ 84@3 ~ 86@3 84@3 ~ 88@3 ~>")
   .delaytime(.125)
   .room(1.8)
 
+$: s("gm_harmonica")
+  .struct("<~@2 x ~>")
+  .chop(16)
+  .lpf(air_cutoff)
+  .lpa(0.45)
+  .delay("<0 .125 .25 0>")
+  .delaytime("<.125 .25>")
+  .room(5)
+  .gain(sine.range(0.1, 1))
+  .adsr("1.5:1.5:2:1.5")
 
 $: note("<{{69, 65} {67, 64, 61} 62 67.5@2 ~ {64, 60}@3} ~>")
   .s("piano")
@@ -58,7 +43,7 @@ $: note("<{{69, 65} {67, 64, 61} 62 67.5@2 ~ {64, 60}@3} ~>")
 $: note("{59, 55} {57, 54, 51} 52 57.5@2 ~ {54, 50}@3 {69, 65} {67, 64, 61} 62 67.5@2? ~ {64, 60}@3?")
   .slow(2)
   .clip(saw.slow(2))
-  .gain("<0.35 0.5 0.7 1.1>")
+  .gain("<0.35 0.5 0.7 0.9>")
   .sustain("<.25 .5 1 2>/2")
   .lpf(300)
   .cutoff(bass_cutoff)
@@ -67,20 +52,14 @@ $: note("{59, 55} {57, 54, 51} 52 57.5@2 ~ {54, 50}@3 {69, 65} {67, 64, 61} 62 6
   .superimpose(x => x.detune("<-0.25 -0.12 0.12 0.25>/2"))
   .sometimesBy(0.12, x => x.ply("<2 4>"))
 
-$: note("59 ~ 59 ~")
-  .s("sine")
-  .lpf(200)
-  .gain(0.22)
-  .adsr("0.01:0.1:0.3:0.1")
-
-$: s("white@4? ~@12")
+ 
+$: s("white@4 ~@12")
+  .decay(2)
   .cutoff(sound_cutoff)
-  .gain("<0.9 0.65 0.45 0.2>")
-  .adsr(".01:.25:1:.18")
-  .chop(24)
-  .room(0.7)
-  .delay("<0 .25 0 .5>")
-  .delaytime(.125)
+  .gain("<0.5 0.25 0.15 0.05>")
+  .adsr(".01:.3:1:.2")
+  .chop(20)
+  .room(.5)
 
 $: s("bd(1,16,0):2")
   .bank(dbank)
@@ -88,23 +67,20 @@ $: s("bd(1,16,0):2")
   .sometimesBy(0.25, x => x.speed(1.05))
   .lpf(2000)
   .room(0.1)
-  .every(4, x => x.ply(2))   
 
-$: s("ch*8")
-  .bank(dbank)
-  .gain("<0 .06 0 .08 0 .1 0 .06>")
-  .lpf(6000)
-  .room(0.4)
-  .sometimesBy(0.25, x => x.ply(2))
-  .every(8, x => x.struct("<x*16>"))
-
-$: note("Bb3,D4".superimpose(x => x.add(.2)))
-  .s("rim")
-  .cutoff(900)
+$: note("Bb3,D4".superimpose(x=>x.add(.2)))
+  .s('rim')
+  .cutoff(800) // pitch at 1000 Hz
+    //    "<~@3 [~ x]>" is a beat patther    
+    //    - < ... >: sequence
+    //    - ~: rest
+    //    - x: sound
+    //    - @3: delay the event to a sub-position
+    //    - [~ x]: subdivition
   .struct("<~@3 [~ x]>")
-  .decay(.03)
-  .gain(0.9)
-  .sustain(0.5)
-  .delay(0.9)
-  .delaytime(.125)
-  .room(2.6)
+  .decay(.05)
+  .gain(1.3)
+  .sustain(1)
+  .delay(1) // add delay / echo mixture
+  .delaytime(.125) // echo space 0.1255
+  .room(3)
