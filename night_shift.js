@@ -3,6 +3,8 @@
 
 setCps(140/60/4)
 
+
+
 const dbank = "tr909"
 const sound_cutoff = 600
 const piano_cutoff = 2400
@@ -42,7 +44,7 @@ $: s("rim").struct("~ x ~ x")
 $: note("<~ 84@3 ~ 86@3 84@3 ~ 88@3 ~>")
   .s("sine")
   .lpf(3500)
-  .gain("<0 0.08 0 0.09 0.07 0 0.1 0>")
+  .gain("<0.3 0.2 0.4 0.15 0.3 0 0.3 0.1>")
   .adsr("0.01:0.06:0.2:0.08")
   .delay("<0 .25 0 .5>")
   .delaytime(.125)
