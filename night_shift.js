@@ -1,5 +1,5 @@
-// DATE: 20260215
-// "NIGHT SHIFT" @by "EVA DAI"
+// "NIGHT SHIFT"
+// "NIGHT SHIFT" @by Eva Dai
 
 setCps(140/60/4)
 
@@ -9,6 +9,20 @@ const piano_cutoff = 2400
 const air_cutoff   = 1400
 const bass_cutoff  = 800
 
+$: s("saw")
+  .note("c6")
+  .lpf("<3000, 4000, 5000, 6000>")
+  .chop(160) // granularization as if flapping wing
+  // Amplitude modulation
+  .gain(
+    sine.range(0.01, 0.07).segment(60)
+      .mul(
+          "<0.05 0.12 0.25 0.3 0.22 0.12 0.06 0.03>"
+        .slow(4)
+      )
+  )
+  .room(0.35)
+  .slow(2)
 
   // tick
 $: s("rim").struct("x ~ x ~")
