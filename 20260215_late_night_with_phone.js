@@ -1,6 +1,5 @@
 // DATE: 20260215
-// LATE NIGHT WITH PHONE
-// CREATED BY EVA DAI
+// "NIGHT SHIFT" @by "EVA DAI"
 
 setCps(140/60/4)
 
@@ -8,7 +7,22 @@ const dbank = "tr909"
 const sound_cutoff = 600
 const piano_cutoff = 2400
 const air_cutoff   = 1400
-const bass_cutoff  = 700
+const bass_cutoff  = 800
+
+
+  // tick
+$: s("rim").struct("x ~ x ~")
+    .hpf(4500)
+    .gain(0.025)
+    .decay(0.03)
+.room(0.5)
+
+  // tock
+$: s("rim").struct("~ x ~ x")
+    .lpf(1400)
+    .gain(0.1)
+    .decay(0.05)
+.room(0.5)
 
 
 $: note("<~ 84@3 ~ 86@3 84@3 ~ 88@3 ~>")
@@ -23,29 +37,37 @@ $: note("<~ 84@3 ~ 86@3 84@3 ~ 88@3 ~>")
 $: s("gm_harmonica")
   .struct("<~@2 x ~>")
   .chop(16)
-  .lpf(air_cutoff)
-  .lpa(0.45)
+  .lpf(chooseCycles("600", "1000", "2000", "3000"))
+  .lpa(1)
   .delay("<0 .125 .25 0>")
   .delaytime("<.125 .25>")
   .room(5)
-  .gain(sine.range(0.1, 1))
+  .gain(sine.range(0.3, 0.8))
   .adsr("1.5:1.5:2:1.5")
 
-$: note("<{{69, 65} {67, 64, 61} 62 67.5@2 ~ {64, 60}@3} ~>")
+$: s("wind")
+  .struct("<~@3 x?>")
+  .cutoff(air_cutoff)
+  .gain(chooseCycles("0.4", "0.6", "0.8", "1"))
+  .adsr("1.5:1.5:2:<2 5 10>")
+  .chop(20)
+  .room(3)
+
+$: note("[69, 65] [67, 64, 61] 62 67.5@2 ~ [64, 60]@2")
   .s("piano")
   .lpf(piano_cutoff)
-  .gain("<0.05 0.03 0.01 0>")
-  .room(1.2)
-  .delay("<0 0 .25 0>")
+  .gain("<0.01 0.005 0.002 0.001>")
+  .room(3)
+  .delay("<0 .25 .5 0>")
   .delaytime(.25)
 
 
-$: note("{59, 55} {57, 54, 51} 52 57.5@2 ~ {54, 50}@3 {69, 65} {67, 64, 61} 62 67.5@2? ~ {64, 60}@3?")
+$: note("[59, 55] [57, 54, 51] 52 57.5@2 ~ [54, 50]@2 [69, 65] [67, 64, 61] 62 67.5@2 ~ [64, 60]@2?")
   .slow(2)
   .clip(saw.slow(2))
-  .gain("<0.35 0.5 0.7 0.9>")
+  .gain("<0.8 0.9 1 1.2>")
   .sustain("<.25 .5 1 2>/2")
-  .lpf(300)
+  // .lpf(300)
   .cutoff(bass_cutoff)
   .lpa(0.55)
   .lpenv("<3 2 1 0>")
@@ -53,22 +75,15 @@ $: note("{59, 55} {57, 54, 51} 52 57.5@2 ~ {54, 50}@3 {69, 65} {67, 64, 61} 62 6
   .sometimesBy(0.12, x => x.ply("<2 4>"))
 
  
-$: s("white@4 ~@12")
+$: s("white@4? ~@12")
   .decay(2)
   .cutoff(sound_cutoff)
-  .gain("<0.5 0.25 0.15 0.05>")
+  .gain("<0.6 0.4 0.25 0.15>")
   .adsr(".01:.3:1:.2")
   .chop(20)
   .room(.5)
 
-$: s("bd(1,16,0):2")
-  .bank(dbank)
-  .gain("<0.22 0.28 0.22 0.3>")
-  .sometimesBy(0.25, x => x.speed(1.05))
-  .lpf(2000)
-  .room(0.1)
-
-$: note("Bb3,D4".superimpose(x=>x.add(.2)))
+$: note("Bb3,D4".superimpose(x=>x.add(1)))
   .s('rim')
   .cutoff(800) // pitch at 1000 Hz
     //    "<~@3 [~ x]>" is a beat patther    
